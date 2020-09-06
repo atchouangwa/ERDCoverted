@@ -1,0 +1,55 @@
+CREATE TABLE reviewer(
+screen_name TEXT UNIQUE, 
+identity_provider TEXT, 
+CONSTRAINT identity PRIMARY KEY(screen_name, identity_provider)
+); 
+
+
+CREATE TABLE chain(
+name text PRIMARY KEY, 
+city text, 
+state integer
+); 
+
+
+CREATE TABLE business(
+name text, 
+ID SERIAL UNIQUE, 
+street_address text UNIQUE, 
+city text UNIQUE,                                      
+state integer UNIQUE,
+ZIP integer UNIQUE,
+chain_name text, 
+FOREIGN KEY(chain_name) REFERENCES chain(name)
+);
+
+
+CREATE TABLE menu(
+label text PRIMARY KEY, 
+url text, 
+business_ID SERIAL,
+FOREIGN KEY(business_ID) REFERENCES business(ID)
+); 
+
+
+CREATE TABLE reviewer_business_xref(
+reviewer_identity text, 
+business_ID SERIAL, 
+views int, 
+rating int, 
+review_date DATE, 
+comments text, 
+PRIMARY KEY(reviewer_identity, business_ID),
+FOREIGN KEY(reviewer_identity) REFERENCES reviewer(screen_name),
+FOREIGN KEY(business_ID) REFERENCES business(ID)
+);
+
+CREATE TABLE business_business_type(
+business_type text, 
+business_street_address text, 
+business_city text, 
+business_state integer, 
+business_ZIP integer, 
+PRIMARY KEY(business_street_address, business_city, business_state, business_ZIP, business_type),
+FOREIGN KEY (business_street_address ,business_city, business_state, business_ZIP) REFERENCES business(street_address, city, state, ZIP)
+); 
